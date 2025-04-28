@@ -1,0 +1,247 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת 3 - ביצועי קמפיינים בדיוור אלקטרוני 📧</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            color: #fff;
+            line-height: 1.6;
+            direction: rtl;
+            animation: gradientShift 15s ease infinite;
+            background-size: 400%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        header img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            backdrop-filter: blur(12px);
+            transition: transform 0.4s, box-shadow 0.4s;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .section:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            margin: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 65, 108, 0.6);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+
+        .advertising {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .btn {
+                padding: 12px 20px;
+            }
+
+            header img {
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1300&q=80" alt="Email Marketing Analytics">
+        <h1>מערכת 3 - ביצועי קמפיינים בדיוור אלקטרוני 📧</h1>
+        <div>
+            <a href="index.html" class="btn">חזרה לדף הראשי 🏠</a>
+            <a href="#contact" class="btn">צרו קשר 📞</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>על המערכת 📬</h2>
+            <p>מערכת זו מתמקדת ב<strong>ניתוח ביצועי קמפיינים בדיוור אלקטרוני</strong>, כולל <strong>שיעורי פתיחה</strong>, <strong>קליקים</strong> ו<strong>המרות</strong>. היא מספקת <strong>תובנות מעמיקות</strong> לשיפור אסטרטגיות הדיוור, הגברת המעורבות, ויצירת קמפיינים ממוקדים שמניבים תוצאות.</p>
+            <h3>תכונות עיקריות:</h3>
+            <ul>
+                <li>📊 ניתוח <strong>שיעורי פתיחה וקליקים</strong> לפי סגמנטים.</li>
+                <li>🧪 מעקב אחרי ביצועי <strong>A/B Testing</strong> במיילים.</li>
+                <li>💡 המלצות לשיפור <strong>תוכן המיילים</strong>.</li>
+                <li>📑 דוחות מפורטים על התנהגות נמענים.</li>
+                <li>🚀 אוטומציה של משלוחים מותאמים אישית.</li>
+            </ul>
+        </div>
+
+        <div class="section advertising">
+            <h2>הכוח של דיוור אלקטרוני 📧</h2>
+            <p><strong>דיוור אלקטרוני</strong> הוא אחד הכלים היעילים ביותר בפרסום דיגיטלי. הוא מאפשר לעסקים לשלוח מסרים מותאמים אישית ישירות לתיבת הדואר של הלקוחות, תוך שמירה על עלויות נמוכות ותשואות גבוהות.</p>
+            <p><strong>למה להשקיע בדיוור?</strong></p>
+            <ul>
+                <li>🎯 <strong>קשר ישיר</strong>: דיבור אישי עם הלקוחות שלך.</li>
+                <li>📈 <strong>שיעורי המרה גבוהים</strong>: מיילים ממוקדים יכולים להגדיל מכירות ב-20%.</li>
+                <li>💸 <strong>חסכוני</strong>: עלות נמוכה בהשוואה לערוצי פרסום אחרים.</li>
+                <li>🔄 <strong>גמישות</strong>: התאמת תוכן בזמן אמת על בסיס נתונים.</li>
+            </ul>
+        </div>
+
+        <div class="section" id="tableau">
+            <h2>דשבורד דיוור אלקטרוני 📊</h2>
+            <p>הדשבורד שלפניכם מציג <strong>ניתוח מפורט</strong> של ביצועי קמפיינים בדיוור אלקטרוני, כולל <strong>שיעורי פתיחה</strong>, <strong>קליקים</strong> ו<strong>המרות</strong>.</p>
+            <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+            <tableau-viz 
+                id="tableauViz"
+                src="https://public.tableau.com/views/book2_3_17458670475900/Dashboard3"
+                toolbar="bottom"
+                hide-tabs
+                width="100%"
+                height="800">
+            </tableau-viz>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = button.getAttribute('href');
+                document.body.style.opacity = 0;
+                setTimeout(() => {
+                    window.location.href = href === '#contact' ? 'mailto:contact@alona-marketing.com' : href;
+                }, 500);
+            });
+        });
+
+        window.addEventListener('load', () => {
+            document.body.style.transition = 'opacity 0.5s';
+            document.body.style.opacity = 1;
+        });
+    </script>
+</body>
+</html>

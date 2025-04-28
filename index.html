@@ -1,0 +1,316 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>המערכת של אלונה - שיווק דיגיטלי 🚀</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #8a2be2, #ff69b4);
+            color: #fff;
+            line-height: 1.6;
+            direction: rtl;
+            animation: gradientShift 15s ease infinite;
+            background-size: 400%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        header img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            backdrop-filter: blur(12px);
+            transition: transform 0.4s, box-shadow 0.4s;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .section:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 18px 35px;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 1.2em;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 65, 108, 0.6);
+        }
+
+        .why-us, .testimonials, .contact, .advertising, .clients {
+            text-align: center;
+        }
+
+        .why-us ul, .advertising ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .why-us li, .advertising li {
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+
+        .testimonials blockquote {
+            font-style: italic;
+            margin: 25px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .clients-marquee {
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .clients-marquee img {
+            height: 60px;
+            margin: 0 30px;
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .btn {
+                padding: 12px 25px;
+                font-size: 1em;
+            }
+
+            header img {
+                max-height: 250px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://images.unsplash.com/photo-1516321310764-9592001f5c02?ixlib=rb-4.0.3&auto=format&fit=crop&w=1300&q=80" alt="Digital Marketing Dashboard">
+        <h1>המערכת של אלונה - מומחית לשיווק דיגיטלי 🚀</h1>
+        <p>קבלו <strong>החלטות חכמות</strong> מבוססות נתונים לשיווק ופרסום דיגיטלי 📊</p>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>על המערכת 💡</h2>
+            <p>המערכת של אלונה היא <strong>פתרון מהפכני</strong> לניתוח נתוני שיווק דיגיטלי בצורה ויזואלית. היא מאפשרת <strong>זיהוי מגמות</strong> בקמפיינים ומכירות, תמיכה ב<strong>קבלת החלטות מושכלות</strong>, ושיפור משמעותי של ביצועי השיווק והפרסום הדיגיטלי. עם ממשק אינטואיטיבי, דשבורדים מתקדמים ו<strong>תובנות בזמן אמת</strong>, המערכת מתאימה לעסקים בכל גודל, ממשרדי פרסום קטנים ועד תאגידים בינלאומיים.</p>
+        </div>
+
+        <div class="section">
+            <h2>הסיפור של אלונה 🌟</h2>
+            <p>אלונה יצאה לדרכה בגיל 21 בלבד, חמושה בחלום גדול וחיבור לאינטרנט. עם מחשב נייד ישן ותשוקה בלתי נלאית לשיווק דיגיטלי, היא בנתה את המערכת הראשונה שלה בחדר קטן בתל אביב. כיום, בגיל 29 בלבד, אלונה מובילה חברה שתומכת ב<strong>מעל 100 חברות</strong> ברחבי העולם, כולל מותגי על כמו Nike ו-Amazon. היא זכתה ב-17 פרסים בינלאומיים על חדשנות, הופיעה על שער Forbes, ואפילו ייעצה לממשלות בנושא טרנספורמציה דיגיטלית. הסוד שלה? <strong>נתונים, תשוקה, וקצת קסם</strong>. השמועות אומרות שהיא עובדת על ממשק שמבוסס על בינה מלאכותית שיכול לחזות מגמות שיווק לפני שהן קורות!</p>
+        </div>
+
+        <div class="section advertising">
+            <h2>כל מה שצריך לדעת על פרסום דיגיטלי 📢</h2>
+            <p><strong>מהו פרסום דיגיטלי?</strong> פרסום דיגיטלי כולל כל פעילות שיווקית המתבצעת בערוצים מקוונים, כמו רשתות חברתיות, מנועי חיפוש, אתרים ודיוור אלקטרוני. זהו הכלי החזק ביותר כיום להגעה לקהלים ממוקדים.</p>
+            <p><strong>למה זה חשוב?</strong> בעולם שבו 80% מהצרכנים מחפשים מוצרים ושירותים באינטרנט, פרסום דיגיטלי מאפשר לעסקים להתבלט, לבנות מותג וליצור קשר ישיר עם הלקוחות.</p>
+            <p><strong>איך זה משפיע על ההכנסות?</strong> קמפיינים ממוקדים יכולים להגדיל את <strong>שיעורי ההמרה</strong> ב-50% או יותר, תוך הפחתת עלויות פרסום בהשוואה לערוצים מסורתיים.</p>
+            <p><strong>אסטרטגיות מובילות:</strong></p>
+            <ul>
+                <li>🎯 <strong>מיקוד קהל יעד</strong>: שימוש בנתונים דמוגרפיים והתנהגותיים להגעה ללקוחות הרלוונטיים.</li>
+                <li>🔍 <strong>אופטימיזציה למנועי חיפוש (SEO)</strong>: שיפור דירוג האתר בתוצאות החיפוש.</li>
+                <li>📧 <strong>דיוור אלקטרוני</strong>: שליחת תוכן מותאם אישית להגברת מעורבות.</li>
+                <li>🧪 <strong>A/B Testing</strong>: ניסוי גרסאות שונות של קמפיינים לבחירת היעילה ביותר.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>גלו את המערכות שלנו 📊</h2>
+            <div class="buttons">
+                <a href="dash1.html" class="btn">מערכת 1 - ביצועי קמפיינים דיגיטליים</a>
+                <a href="dash2.html" class="btn">מערכת 2 - החזר השקעה על פרסום דיגיטלי</a>
+                <a href="dash3.html" class="btn">מערכת 3 - ביצועי קמפיינים בדיוור אלקטרוני</a>
+            </div>
+        </div>
+
+        <div class="section why-us">
+            <h2>למה לבחור בנו? 💪</h2>
+            <ul>
+                <li>🏆 <strong>מומחיות עולמית</strong>: מעל 10 שנות ניסיון עם לקוחות מובילים כמו Google ו-Coca-Cola.</li>
+                <li>📈 <strong>תוצאות מוכחות</strong>: הגדלנו הכנסות של לקוחות ב-300% בממוצע.</li>
+                <li>🔧 <strong>פתרונות מותאמים</strong>: כלים המותאמים לצרכים הייחודיים של העסק שלך.</li>
+                <li>🌍 <strong>תמיכה 24/7</strong>: צוות זמין בכל רחבי הגלובוס.</li>
+            </ul>
+        </div>
+
+        <div class="section clients">
+            <h2>חברות שעובדות איתנו 🤝</h2>
+            <div class="clients-marquee">
+                <img src="https://logo.clearbit.com/google.com" alt="Google">
+                <img src="https://logo.clearbit.com/amazon.com" alt="Amazon">
+                <img src="https://logo.clearbit.com/coca-cola.com" alt="Coca-Cola">
+                <img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft">
+                <img src="https://logo.clearbit.com/nike.com" alt="Nike">
+            </div>
+        </div>
+
+        <div class="section testimonials">
+            <h2>מה לקוחות אומרים 🗣️</h2>
+            <blockquote>"המערכת של אלונה שינתה את המשחק! הגדלנו את ההמרות ב-<strong>45%</strong> תוך חודש!"<br>– דני מלכה, מנכ"ל TechTrend</blockquote>
+            <blockquote>"ממשק מדהים ותמיכה ברמה אחרת. זו המערכת הכי טובה שראיתי!"<br>– מיכל גולן, מנהלת שיווק, GlobalBrands</blockquote>
+        </div>
+
+        <div class="section contact">
+            <h2>צרו קשר 📞</h2>
+            <p>מוכנים להגדיל את ההכנסות שלכם עם <strong>שיווק דיגיטלי חכם</strong>? דברו איתנו עכשיו!</p>
+            <a href="#contact" class="btn">צרו קשר עכשיו 🚀</a>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = button.getAttribute('href');
+                document.body.style.opacity = 0;
+                setTimeout(() => {
+                    window.location.href = href === '#contact' ? 'mailto:contact@alona-marketing.com' : href;
+                }, 500);
+            });
+        });
+
+        window.addEventListener('load', () => {
+            document.body.style.transition = 'opacity 0.5s';
+            document.body.style.opacity = 1;
+        });
+    </script>
+</body>
+</html>
