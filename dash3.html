@@ -1,48 +1,9 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת 3 - ביצועי קמפיינים בדיוור אלקטרוני 📧</title>
+    <title>מערכת 3 - מגמות חודשיות 📅</title>
     <style>
         * {
             margin: 0;
@@ -177,8 +138,8 @@
 </head>
 <body>
     <header>
-        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1300&q=80" alt="Email Marketing Analytics">
-        <h1>מערכת 3 - ביצועי קמפיינים בדיוור אלקטרוני 📧</h1>
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1300&q=80" alt="Monthly Trends Analytics">
+        <h1>מערכת 3 - מגמות חודשיות 📅</h1>
         <div>
             <a href="index.html" class="btn">חזרה לדף הראשי 🏠</a>
             <a href="#contact" class="btn">צרו קשר 📞</a>
@@ -188,32 +149,32 @@
     <div class="container">
         <div class="section">
             <h2>על המערכת 📬</h2>
-            <p>מערכת זו מתמקדת ב<strong>ניתוח ביצועי קמפיינים בדיוור אלקטרוני</strong>, כולל <strong>שיעורי פתיחה</strong>, <strong>קליקים</strong> ו<strong>המרות</strong>. היא מספקת <strong>תובנות מעמיקות</strong> לשיפור אסטרטגיות הדיוור, הגברת המעורבות, ויצירת קמפיינים ממוקדים שמניבים תוצאות.</p>
+            <p>מערכת זו מתמקדת ב<strong>ניתוח מגמות חודשיות</strong> בביצועי שיווק דיגיטלי, כולל <strong>שינויים בהכנסות</strong>, <strong>מעורבות לקוחות</strong> ו<strong>ביצועי קמפיינים</strong>. היא מספקת <strong>תובנות מעמיקות</strong> לזיהוי דפוסים, תכנון אסטרטגיות עתידיות, והגברת היעילות השיווקית.</p>
             <h3>תכונות עיקריות:</h3>
             <ul>
-                <li>📊 ניתוח <strong>שיעורי פתיחה וקליקים</strong> לפי סגמנטים.</li>
-                <li>🧪 מעקב אחרי ביצועי <strong>A/B Testing</strong> במיילים.</li>
-                <li>💡 המלצות לשיפור <strong>תוכן המיילים</strong>.</li>
-                <li>📑 דוחות מפורטים על התנהגות נמענים.</li>
-                <li>🚀 אוטומציה של משלוחים מותאמים אישית.</li>
+                <li>📊 ניתוח <strong>מגמות הכנסות</strong> לפי חודשים.</li>
+                <li>🧪 מעקב אחרי <strong>שינויים במעורבות לקוחות</strong>.</li>
+                <li>💡 המלצות לשיפור <strong>אסטרטגיות שיווק</strong>.</li>
+                <li>📑 דוחות מפורטים על ביצועי קמפיינים לאורך זמן.</li>
+                <li>🚀 כלים לתכנון קמפיינים עתידיים.</li>
             </ul>
         </div>
 
         <div class="section advertising">
-            <h2>הכוח של דיוור אלקטרוני 📧</h2>
-            <p><strong>דיוור אלקטרוני</strong> הוא אחד הכלים היעילים ביותר בפרסום דיגיטלי. הוא מאפשר לעסקים לשלוח מסרים מותאמים אישית ישירות לתיבת הדואר של הלקוחות, תוך שמירה על עלויות נמוכות ותשואות גבוהות.</p>
-            <p><strong>למה להשקיע בדיוור?</strong></p>
+            <h2>הכוח של ניתוח מגמות 📧</h2>
+            <p><strong>מגמות חודשיות</strong> מאפשרות לעסקים להבין את הדינמיקה של השיווק הדיגיטלי לאורך זמן. ניתוח מגמות עוזר לזהות מה עובד, מה צריך שיפור, ומתי להשיק קמפיינים חדשים כדי למקסם את <strong>ההשפעה השיווקית</strong>.</p>
+            <p><strong>למה לעקוב אחרי מגמות?</strong></p>
             <ul>
-                <li>🎯 <strong>קשר ישיר</strong>: דיבור אישי עם הלקוחות שלך.</li>
-                <li>📈 <strong>שיעורי המרה גבוהים</strong>: מיילים ממוקדים יכולים להגדיל מכירות ב-20%.</li>
-                <li>💸 <strong>חסכוני</strong>: עלות נמוכה בהשוואה לערוצי פרסום אחרים.</li>
-                <li>🔄 <strong>גמישות</strong>: התאמת תוכן בזמן אמת על בסיס נתונים.</li>
+                <li>🎯 <strong>תכנון מדויק</strong>: התאמת אסטרטגיות למגמות בשוק.</li>
+                <li>📈 <strong>צמיחה מתמשכת</strong>: זיהוי הזדמנויות להגדלת הכנסות.</li>
+                <li>💸 <strong>חסכוני</strong>: הימנעות מקמפיינים לא יעילים.</li>
+                <li>🔄 <strong>גמישות</strong>: התאמת תוכניות על בסיס נתונים עדכניים.</li>
             </ul>
         </div>
 
         <div class="section" id="tableau">
-            <h2>דשבורד דיוור אלקטרוני 📊</h2>
-            <p>הדשבורד שלפניכם מציג <strong>ניתוח מפורט</strong> של ביצועי קמפיינים בדיוור אלקטרוני, כולל <strong>שיעורי פתיחה</strong>, <strong>קליקים</strong> ו<strong>המרות</strong>.</p>
+            <h2>דשבורד מגמות חודשיות 📊</h2>
+            <p>הדשבורד שלפניכם מציג <strong>ניתוח מפורט</strong> של מגמות חודשיות בשיווק דיגיטלי, כולל <strong>הכנסות</strong>, <strong>מעורבות</strong> ו<strong>ביצועי קמפיינים</strong>.</p>
             <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
             <tableau-viz 
                 id="tableauViz"
